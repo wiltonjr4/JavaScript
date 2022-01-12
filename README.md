@@ -1,0 +1,2 @@
+# JavaScipt
+ Studies about JS
