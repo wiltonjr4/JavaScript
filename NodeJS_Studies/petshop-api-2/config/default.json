@@ -1,0 +1,14 @@
+{
+    "mysql":
+    {
+        "database": "petshop2",
+        "user": "root",
+        "password": "root",
+        "host": "localhost"
+    },
+
+    "api":
+    {
+        "gate": 3000
+    }
+}
