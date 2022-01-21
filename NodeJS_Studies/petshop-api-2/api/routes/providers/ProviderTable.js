@@ -21,7 +21,7 @@ module.exports =
 
         if (!found)
         {
-            throw new NotFound()
+            throw new NotFound('Provider')
         }
 
         return found

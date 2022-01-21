@@ -85,4 +85,24 @@ router.delete('/:providerId', async (requisition, answer, next) =>
     }
 })
 
+const productsRouter = require('./products')
+
+const verifyProvider = async (requisition, answer, next) =>
+{
+    try
+    {
+        const id = requisition.params.providerId
+        const provider = new Provider({ id: id })
+        await provider.searchByID()
+        requisition.provider = provider
+        next()
+    }
+    catch (error)
+    {
+        next(error)
+    }
+}
+
+router.use('/:providerId/products', verifyProvider, productsRouter)
+
 module.exports = router

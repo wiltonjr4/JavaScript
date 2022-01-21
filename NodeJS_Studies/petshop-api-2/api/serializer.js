@@ -57,9 +57,20 @@ class ProviderSerializer extends Serializer
     }
 }
 
+class ProductSerializer extends Serializer
+{
+    constructor(contentType, extraFields)
+    {
+        super()
+        this.contentType = contentType
+        this.publicFields = ['id', 'title'].concat(extraFields || [])
+    }
+}
+
 module.exports = 
 {
     Serializer: Serializer,
     ProviderSerializer: ProviderSerializer,
+    ProductSerializer: ProductSerializer,
     acceptedFormats: ['application/json']
 }
