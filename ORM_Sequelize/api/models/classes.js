@@ -14,9 +14,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Classes.init({
     start_date: DataTypes.DATEONLY
-  }, {
+  },
+  {
     sequelize,
-    modelName: 'Classes',
+    paranoid: true,
+    modelName: 'Classes'
   });
   return Classes;
 };

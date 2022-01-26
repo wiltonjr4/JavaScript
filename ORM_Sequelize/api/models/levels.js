@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) =>
   },
   {
     sequelize,
-    modelName: 'Levels',
+    paranoid: true,
+    modelName: 'Levels'
   });
 
   return Levels;
