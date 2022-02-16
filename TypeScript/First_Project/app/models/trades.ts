@@ -4,12 +4,12 @@ export class Trades
 {
     private trades: Trade[] = [];
 
-    add(trade: Trade)
+    public add(trade: Trade)
     {
         this.trades.push(trade);
     }
 
-    list(): readonly Trade[]
+    public list(): readonly Trade[]
     {
         return this.trades;
     }
