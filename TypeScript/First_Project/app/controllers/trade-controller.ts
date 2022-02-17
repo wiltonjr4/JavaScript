@@ -1,3 +1,6 @@
+import { domInjection } from "../decorators/dom-injector.js";
+import { inspect } from "../decorators/inspect.js";
+import { loginExecutionTime } from "../decorators/login-execution-time.js";
 import { WeekDays } from "../enums/week-day.js";
 import { Trade } from "../models/trade.js";
 import { Trades } from "../models/trades.js";
@@ -9,6 +12,7 @@ export class TradeController
     private inputDate: HTMLInputElement;
     private inputAmount: HTMLInputElement;
     private inputValue: HTMLInputElement;
+    
     private trades = new Trades();
     private tradeView = new TradeView('#tradeView');
     private messageView = new MessageView('#messageView');
@@ -21,6 +25,8 @@ export class TradeController
         this.tradeView.update(this.trades);
     }
 
+    @inspect()
+    @loginExecutionTime(true)
     public add(): void
     {
         const trade = this.createTrade();
@@ -34,6 +40,24 @@ export class TradeController
         this.tradeView.update(this.trades);
         this.messageView.update('Trade Successfully Add!')
         this.cleanForm();
+    }
+
+    public importData(): void
+    {
+        fetch('http://localhost:8080/dados')
+            .then( res => res.json() )
+            .then((data: any[]) => {
+                return data.map(todayData => {
+                    return new Trade(new Date(), todayData.vezes, todayData.montante)
+                })
+            })
+            .then(todayTrades => {
+                for(let trade of todayTrades)
+                {
+                    this.trades.add(trade);
+                }
+                this.tradeView.update(this.trades);
+            });
     }
 
     private businessDay(date: Date)

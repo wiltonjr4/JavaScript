@@ -1,3 +1,11 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { inspect } from "../decorators/inspect.js";
+import { loginExecutionTime } from "../decorators/login-execution-time.js";
 import { WeekDays } from "../enums/week-day.js";
 import { Trade } from "../models/trade.js";
 import { Trades } from "../models/trades.js";
@@ -27,6 +35,21 @@ export class TradeController {
         this.messageView.update('Trade Successfully Add!');
         this.cleanForm();
     }
+    importData() {
+        fetch('http://localhost:8080/dados')
+            .then(res => res.json())
+            .then((data) => {
+            return data.map(todayData => {
+                return new Trade(new Date(), todayData.vezes, todayData.montante);
+            });
+        })
+            .then(todayTrades => {
+            for (let trade of todayTrades) {
+                this.trades.add(trade);
+            }
+            this.tradeView.update(this.trades);
+        });
+    }
     businessDay(date) {
         return date.getDay() > WeekDays.SUNDAY
             && date.getDay() < WeekDays.SATURDAY;
@@ -44,3 +67,7 @@ export class TradeController {
         this.inputDate.focus();
     }
 }
+__decorate([
+    inspect(),
+    loginExecutionTime(true)
+], TradeController.prototype, "add", null);

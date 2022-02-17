@@ -1,3 +1,6 @@
+import { inspect } from "../decorators/inspect.js";
+import { loginExecutionTime } from "../decorators/login-execution-time.js";
+
 export abstract class View<T>
 {
     protected element: HTMLElement;
