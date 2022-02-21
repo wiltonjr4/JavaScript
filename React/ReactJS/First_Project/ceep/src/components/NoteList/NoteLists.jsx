@@ -4,13 +4,38 @@ import "./style.css";
 
 class NoteLists extends Component {
 
+  constructor(){
+    super();
+    this.state = {notes:[]}
+
+    this._newNotes = this._newNotes.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.notes.subscribe(this._newNotes);
+  }
+
+  componentWillUnmount(){
+    this.props.notes.unsubscribe(this._newNotes);
+  }
+
+  _newNotes(notes){
+    this.setState({...this.state, notes});
+  }
+
   render() {
     return (
       <ul className="note-list">
-        {this.props.notes.map((note, index) => {
+        {this.state.notes.map((note, noteIndex) => {
           return (
-            <li className="note-list_iten" key={index}>
-              <NoteCard title = {note.title} text={note.text}/>
+            <li className="note-list_iten" key={noteIndex}>
+              <NoteCard
+                index={noteIndex}
+                title={note.title}
+                text={note.text}
+                eraseNote={this.props.eraseNote}
+                category={note.category}
+              />
             </li>
           );
         })}
