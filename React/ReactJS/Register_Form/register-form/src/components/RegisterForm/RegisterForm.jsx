@@ -1,93 +1,39 @@
-import React, { useState } from "react";
-import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
+import { Step, StepLabel, Stepper, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import DeliveryData from "./DeliveryData";
+import PersonalData from "./PersonalData";
+import UserData from "./UserData";
 
-function RegisterForm({ onSend, validateCPF }) {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [promotions, setPromotions] = useState(true);
-  const [news, setNews] = useState(true);
-  const [errors, setErrors] = useState({ cpf: { valid: true, text: "" } });
+function RegisterForm({ onSend }) {
+  const [currentStage, setCurrentStage] = useState(0);
+  const [collectedData, setCollectedData] = useState({});
 
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSend({ name, lastName, cpf, news, promotions });
-      }}
-    >
-      <TextField
-        value={name}
-        onChange={(event) => {
-          setName(event.target.value);
-        }}
-        id="name"
-        label="Name"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={lastName}
-        onChange={(event) => {
-          setLastName(event.target.value);
-        }}
-        id="lastName"
-        label="Last Name"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={cpf}
-        onChange={(event) => {
-          setCpf(event.target.value);
-        }}
-        onBlur={(event) => {
-          const isValid = validateCPF(cpf);
-          setErrors({ cpf: isValid });
-        }}
-        error={!errors.cpf.valid}
-        helperText={errors.cpf.text}
-        id="cpf"
-        label="CPF"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
+  useEffect(() => {
+    if (currentStage === forms.length - 1) {
+      onSend(collectedData);
+    }
+  });
 
-      <FormControlLabel
-        label="Promotions"
-        control={
-          <Switch
-            checked={promotions}
-            onChange={(event) => {
-              setPromotions(event.target.checked);
-            }}
-            name="promotions"
-            color="primary"
-          />
-        }
-      />
-      <FormControlLabel
-        label="News"
-        control={
-          <Switch
-            checked={news}
-            onChange={(event) => {
-              setNews(event.target.checked);
-            }}
-            name="News"
-            color="primary"
-          />
-        }
-      />
+  const forms = [
+    <UserData onSend={next} />,
+    <PersonalData onSend={next} />,
+    <DeliveryData onSend={next} />,
+    <Typography variant="h5">Thanks for Register!</Typography>,
+  ];
 
-      <Button type="submit" variant="contained" color="primary">
-        Register
-      </Button>
-    </form>
-  );
+  function next(data) {
+    setCollectedData({ ...collectedData, ...data });
+    setCurrentStage(currentStage + 1);
+  }
+
+  return <>
+  <Stepper activeStep={currentStage}>
+      <Step><StepLabel>Login</StepLabel></Step>
+      <Step><StepLabel>Personal</StepLabel></Step>
+      <Step><StepLabel>Delivery</StepLabel></Step>
+      <Step><StepLabel>Finish</StepLabel></Step>
+  </Stepper>
+  {forms[currentStage]} </>;
 }
 
 export default RegisterForm;
